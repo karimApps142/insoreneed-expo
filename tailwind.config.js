@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        Jost: ["DarkerGrotesque", "sans-serif"],
         Jakarta: ["Jost", "sans-serif"],
         JakartaBold: ["Jost-Bold", "sans-serif"],
         JakartaExtraBold: ["DarkerGrotesque-SemiBold", "sans-serif"],

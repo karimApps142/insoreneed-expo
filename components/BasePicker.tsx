@@ -61,11 +61,11 @@ const BasePicker: React.FC<BasePickerProps> = ({
 
     return (
         <>
-            <TouchableOpacity className="my-2 w-full" activeOpacity={0.6} onPress={open}>
+            <View className="my-2 w-full" >
                 <Text className={`font-JakartaBold text-gray-600 mb-2 ${labelStyle}`}>
                     {label}
                 </Text>
-                <View className={`flex flex-row justify-start items-center relative border-b border-slate-300 focus:border-primary-500 ${containerStyle}`}>
+                <TouchableOpacity activeOpacity={0.6} onPress={open} className={`flex flex-row justify-start items-center relative border-b border-slate-300 focus:border-primary-500 ${containerStyle}`}>
                     {icon && <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />}
                     <Text
                         className={`rounded-xl py-3 px-2 font-JakartaMedium text-[15px] flex-1 ${inputStyle} text-left ${selectedItem ? "text-[#0286FF]" : "text-gray-500"}`}
@@ -77,8 +77,8 @@ const BasePicker: React.FC<BasePickerProps> = ({
                                 : "Select"}
                     </Text>
                     <BaseIcon icon={icons.arrowDown} color={COLORS.gray} />
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            </View>
 
             <RBSheet
                 ref={pickerRef}

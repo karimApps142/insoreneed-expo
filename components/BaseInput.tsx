@@ -1,4 +1,5 @@
 import { COLORS } from "@/constants/Theme";
+import { InputFieldProps } from "@/types";
 import {
     TextInput,
     View,
@@ -8,20 +9,10 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Platform,
-    TextInputProps,
 } from "react-native";
 
 
-interface InputFieldProps extends TextInputProps {
-    label: string;
-    icon?: any;
-    secureTextEntry?: boolean;
-    labelStyle?: string;
-    containerStyle?: string;
-    inputStyle?: string;
-    iconStyle?: string;
-    className?: string;
-}
+
 
 const BaseInput = ({
     label,
@@ -40,9 +31,10 @@ const BaseInput = ({
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View className="my-2 w-full">
-                    <Text className={`font-JakartaBold text-gray-600 mb-2 ${labelStyle}`}>
-                        {label}
-                    </Text>
+                    {!!label &&
+                        <Text className={`font-JakartaBold text-gray-600 mb-2 ${labelStyle}`}>
+                            {label}
+                        </Text>}
                     <View
                         className={`flex flex-row justify-start items-center relative border-b border-slate-300 focus:border-primary-500  ${containerStyle}`}
                     >
@@ -51,7 +43,7 @@ const BaseInput = ({
                         )}
                         <TextInput
                             className={`rounded-xl py-3 px-2 font-JakartaMedium text-[15px] flex-1 ${inputStyle} text-left text-[#0286FF]`}
-
+                            multiline
                             placeholderTextColor={COLORS.gray}
                             secureTextEntry={secureTextEntry}
                             {...props}

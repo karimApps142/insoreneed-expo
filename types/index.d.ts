@@ -1,5 +1,5 @@
 import { ComponentType } from "react";
-import { PressableProps } from "react-native";
+import { PressableProps, TextInputProps } from "react-native";
 
 
 declare interface ButtonProps extends PressableProps {
@@ -12,4 +12,16 @@ declare interface ButtonProps extends PressableProps {
     loading?: boolean;
     disabled?: boolean;
     loadingColor?: string
+}
+
+
+declare interface InputFieldProps extends TextInputProps {
+    label?: string;
+    icon?: any;
+    secureTextEntry?: boolean;
+    labelStyle?: string;
+    containerStyle?: string;
+    inputStyle?: string;
+    iconStyle?: string;
+    className?: string;
 }

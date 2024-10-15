@@ -17,6 +17,8 @@ const Layout = () => {
             <Stack.Screen name="select-date-time" />
             <Stack.Screen name="booking-review" />
             <Stack.Screen name="google-places" />
+            <Stack.Screen name="choose-from-map" />
+
         </Stack>
 
     );

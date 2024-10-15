@@ -5,11 +5,11 @@ import { Text, Pressable, View, ActivityIndicator } from "react-native";
 const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
     switch (variant) {
         case "secondary":
-            return "bg-gray-500";
+            return "bg-gray-500 shadow-md shadow-neutral-400/70";
         case "danger":
-            return "bg-red-500";
+            return "bg-red-500 shadow-md shadow-neutral-400/70";
         case "success":
-            return "bg-green-500";
+            return "bg-green-500 shadow-md shadow-neutral-400/70";
         case "outline":
             return "bg-transparent border-neutral-300 border-[0.5px]";
         default:
@@ -50,25 +50,26 @@ const BaseButton = ({
             android_ripple={{ color: 'rgba(255,255,255,0.3)' }}
             disabled={loading || disabled}
             onPress={onPress}
-            className={`w-full rounded p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${loading || disabled ? 'bg-gray-400' : getBgVariantStyle(bgVariant)} ${className}`}
+            className={`w-full rounded h-12 flex flex-row justify-center items-center  ${loading || disabled ? 'bg-gray-400' : getBgVariantStyle(bgVariant)} ${className}`}
             {...props}
         >
-            {IconLeft && <IconLeft />}
-            <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>
-                {title}
-            </Text>
-            {IconRight && <IconRight />}
-            <View
-                style={{
-                    position: 'absolute',
-                    right: 15,
-                }}>
+            {!loading ?
+                <>
+                    {IconLeft && <IconLeft />}
+                    <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>
+                        {title}
+                    </Text>
+                    {IconRight && <IconRight />}
+                </> :
+
                 <ActivityIndicator
                     animating={!disabled && loading ? true : false}
                     size="small"
                     color={loadingColor}
                 />
-            </View>
+
+            }
+
         </Pressable>
     );
 };
