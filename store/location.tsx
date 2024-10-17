@@ -1,18 +1,31 @@
 import { create } from "zustand";
 
+interface Location {
+    latitude: number;
+    longitude: number;
+    address: string;
+}
+
 declare interface LocationStore {
     userLatitude: number | null;
     userLongitude: number | null;
     userAddress: string | null;
+
+    destinationLatitude: number | null;
+    destinationLongitude: number | null;
+    destinationAddress: string | null;
+
     setUserLocation: ({
         latitude,
         longitude,
         address,
-    }: {
-        latitude: number;
-        longitude: number;
-        address: string;
-    }) => void;
+    }: Location) => void;
+
+    setDestinationLocation: ({
+        latitude,
+        longitude,
+        address,
+    }: Location) => void;
 }
 
 export const useLocationStore = create<LocationStore>((set) => ({
@@ -27,15 +40,23 @@ export const useLocationStore = create<LocationStore>((set) => ({
         latitude,
         longitude,
         address,
-    }: {
-        latitude: number;
-        longitude: number;
-        address: string;
-    }) => {
+    }: Location) => {
         set(() => ({
             userLatitude: latitude,
             userLongitude: longitude,
             userAddress: address,
+        }));
+    },
+
+    setDestinationLocation: ({
+        latitude,
+        longitude,
+        address,
+    }: Location) => {
+        set(() => ({
+            destinationLatitude: latitude,
+            destinationLongitude: longitude,
+            destinationAddress: address,
         }));
     },
 }));

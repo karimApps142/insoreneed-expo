@@ -25,3 +25,26 @@ declare interface InputFieldProps extends TextInputProps {
     iconStyle?: string;
     className?: string;
 }
+
+interface Item {
+    [key: string]: any;
+}
+
+declare interface BasePickerProps {
+    label: string;
+    labelStyle?: string;
+    icon?: any;
+    iconStyle?: string;
+    containerStyle?: string;
+    placeholder?: string;
+    inputStyle?: string;
+    selectedItem?: any;
+    items?: Item[];
+    item_label?: string;
+    item_value?: string;
+    item_subtitle?: string;
+    setSelected?: (value: any) => void;
+    onSelect?: (value: any) => void;
+    pickerLabel?: string;
+    pickerOffset?: number;
+}

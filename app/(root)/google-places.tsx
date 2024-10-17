@@ -9,13 +9,12 @@ import { icons } from "@/constants";
 import { useLocationStore } from "@/store/location";
 import { router } from "expo-router";
 import Geocoder from "react-native-geocoding";
-import { formikRef, placesRef } from "@/constants/global-refs";
-import { useCreateBookingStore } from "@/store/create-booking";
+import { placesRef } from "@/constants/global-refs";
 
 const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY as string;
 
 const GooglePlaces = () => {
-    const { setDestinationLocation } = useCreateBookingStore();
+    const { setDestinationLocation } = useLocationStore();
     const { userAddress, userLatitude, userLongitude } = useLocationStore();
 
     useEffect(() => {
@@ -24,7 +23,7 @@ const GooglePlaces = () => {
                 placesRef.current.focus();
             }
         }, 400);
-    }, [userAddress]);
+    }, []);
 
     const [hasPermission, setHasPermission] = useState<boolean>(false);
     const { setUserLocation } = useLocationStore();
@@ -71,7 +70,7 @@ const GooglePlaces = () => {
 
     return (
         <BaseView>
-            <BaseHeader onPressBack={() => router.replace('/(root)/add-location')} />
+            <BaseHeader onPressBack={() => router.replace("/(root)/add-location")} />
             <View style={styles.container}>
                 <GoogleTextInput label="Address" handlePress={handleConfirmLocation} />
 

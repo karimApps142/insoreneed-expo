@@ -12,8 +12,6 @@ import {
 } from "react-native";
 
 
-
-
 const BaseInput = ({
     label,
     icon,

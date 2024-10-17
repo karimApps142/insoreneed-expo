@@ -1,8 +1,8 @@
 
-export const initialValues: FormValues = {
-    destination_address:  '',
-    destination_latitude:  '',
-    destination_longitude:  '',
+export const initialValues: LocationFormValues = {
+    address:  '',
+    latitude:  '',
+    longitude:  '',
     location_type: '',
     parking_type: '',
     stairs: '',

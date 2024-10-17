@@ -1,46 +1,50 @@
 import { View } from "react-native";
-import React, { useEffect, useState } from "react";
-
+import React, { useCallback, useEffect } from "react";
 import { router } from "expo-router";
-
+import { formikRef } from "@/constants/global-refs";
 import {
     locationTypes,
     parkingOptions,
     petsOptions,
     stairsOptions,
 } from "@/constants/location-picker-data";
-
+import { initialValues } from "@/lib/app-data";
 import BaseView from "@/components/BaseView";
-import BaseInput from "@/components/BaseInput";
-import BasePicker from "@/components/BasePicker";
+import BaseForm from "@/components/form/BaseForm";
 import { BaseHeader } from "@/components/BaseHeader";
 import SubHeader from "@/components/bookings/SubHeader";
 import BaseScrollView from "@/components/BaseScrollView";
-import BottomActionCard from "@/components/bookings/BottomActionCard";
-import { useCreateBookingStore } from "@/store/create-booking";
-import BaseForm from "@/components/form/BaseForm";
-import { formikRef } from "@/constants/global-refs";
-import { initialValues } from "@/lib/app-data";
 import BaseFormInput from "@/components/form/BaseFormInput";
+import { BaseFormPicker } from "@/components/form/BaseFormPicker";
+import BottomActionCard from "@/components/bookings/BottomActionCard";
+import { useLocationStore } from "@/store/location";
+import { validateLocationForm } from "@/lib/validations";
+import { useNotifications } from "react-native-notificated";
 
 
 const BookingLocation = () => {
+    const { destinationAddress, destinationLatitude, destinationLongitude } =
+        useLocationStore();
+    const { notify } = useNotifications()
 
-    const [selectItem, setSelectedItem] = useState(null);
-    const { destination_address, destination_latitude, destination_longitude } = useCreateBookingStore();
 
     useEffect(() => {
-
-        if (destination_address) {
+        if (destinationAddress) {
             formikRef.current?.setValues({
                 ...formikRef.current.values,
-                destination_address,
-                destination_latitude,
-                destination_longitude
-            })
+                address: destinationAddress,
+                latitude: destinationLatitude,
+                longitude: destinationLongitude,
+            });
         }
+    }, [destinationAddress]);
 
-    }, [destination_address])
+    const handleSubmit = useCallback((values: LocationFormValues) => {
+        const { isError } = validateLocationForm(values);
+        if (!isError) {
+            alert(JSON.stringify(values))
+        }
+    }, []);
 
     return (
         <BaseView>
@@ -48,79 +52,70 @@ const BookingLocation = () => {
             <BaseForm
                 initialValues={initialValues}
                 innerRef={formikRef}
-                onSubmit={values => alert(JSON.stringify(values))}
+                onSubmit={handleSubmit}
             >
-
                 <BaseScrollView>
                     <SubHeader
                         title="Booking Location"
                         subtitle="Allow a minimum of 1 hour for your therapist to reach your location."
                     />
+
                     <View className="mt-3">
                         <BaseFormInput
-                            onFocus={() => router.replace('/(root)/google-places')}
-                            name="destination_address"
+                            onFocus={() => router.replace("/(root)/google-places")}
+                            name="address"
                             label="Address"
                             placeholder="Enter your address (e.g., 123 Main St)"
                         />
                     </View>
+
                     <View className="mt-3">
-                        <BasePicker
+                        <BaseFormPicker
+                            name="location_type"
                             label="Location type"
                             items={locationTypes}
                             pickerLabel="Location Types"
-                            selectedItem={selectItem}
-                            setSelected={(value) => {
-                                setSelectedItem(value);
-                            }}
                         />
                     </View>
+
                     <View className="mt-3">
-                        <BasePicker
+                        <BaseFormPicker
+                            name="parking_type"
                             label="Parking"
                             items={parkingOptions}
                             pickerLabel="Parking"
-                            selectedItem={selectItem}
-                            setSelected={(value) => {
-                                setSelectedItem(value);
-                            }}
                         />
                     </View>
+
                     <View className="mt-3">
-                        <BasePicker
+                        <BaseFormPicker
+                            name="stairs"
                             label="Do You have any stairs at this location?"
                             items={stairsOptions}
                             pickerLabel="Do You have any stairs at this location?"
-                            selectedItem={selectItem}
-                            setSelected={(value) => {
-                                setSelectedItem(value);
-                            }}
                         />
                     </View>
+
                     <View className="mt-3">
-                        <BasePicker
+                        <BaseFormPicker
+                            name="pets"
                             label="Do You have any pets at this location?"
                             items={petsOptions}
                             pickerLabel="Do You have any pets at this location?"
-                            selectedItem={selectItem}
-                            setSelected={(value) => {
-                                setSelectedItem(value);
-                            }}
                         />
                     </View>
+
                     <View className="mt-3">
-                        <BaseInput
+                        <BaseFormInput
+                            name="location_notes"
                             label="Location notes"
                             placeholder="e.g. park in driveway"
                         />
                     </View>
                 </BaseScrollView>
 
-                <BottomActionCard
-                    title="Save & Apply" type='submit' />
-
+                <BottomActionCard title="Save & Apply" type="submit" />
             </BaseForm>
-
         </BaseView>
     );
 };

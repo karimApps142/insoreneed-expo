@@ -1,9 +1,9 @@
 
 
-declare interface FormValues {
-    destination_address: string;
-    destination_latitude: string | number;
-    destination_longitude: string | number;
+declare interface LocationFormValues {
+    address: string;
+    latitude: string | number;
+    longitude: string | number;
     location_type: string;
     parking_type: string;
     stairs: string;

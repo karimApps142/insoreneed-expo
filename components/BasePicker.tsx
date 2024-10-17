@@ -5,31 +5,9 @@ import { NoResultsFound } from "./NoResultsFound";
 import { COLORS, SIZES } from "@/constants/Theme";
 import BaseIcon from "./BaseIcon";
 import { icons } from "@/constants";
-
-interface Item {
-    [key: string]: any;
-}
+import { BasePickerProps } from "@/types";
 
 
-
-interface BasePickerProps {
-    label: string;
-    labelStyle?: string;
-    icon?: any;
-    iconStyle?: string;
-    containerStyle?: string;
-    placeholder?: string;
-    inputStyle?: string;
-    selectedItem?: any;
-    items?: Item[];
-    item_label?: string;
-    item_value?: string;
-    item_subtitle?: string;
-    setSelected?: (value: any) => void;
-    onSelect?: (value: any) => void;
-    pickerLabel?: string;
-    pickerOffset?: number;
-}
 
 const BasePicker: React.FC<BasePickerProps> = ({
     label,

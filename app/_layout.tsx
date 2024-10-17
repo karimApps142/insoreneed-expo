@@ -1,10 +1,13 @@
 // import { ClerkLoaded, ClerkProvider } from "@clerk/clerk-expo";
 import { useFonts } from "expo-font";
+import { createNotifications, SlideInLeftSlideOutRight } from 'react-native-notificated'
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { LogBox } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import NotificationWrapper from "@/components/NotificationWrapper";
 
 // import { tokenCache } from "@/lib/auth";
 
@@ -22,6 +25,9 @@ SplashScreen.preventAutoHideAsync();
 // LogBox.ignoreLogs(["Clerk:"]);
 
 export default function RootLayout() {
+
+
+
   const [loaded] = useFonts({
     "DarkerGrotesque": require("../assets/fonts/DarkerGrotesque-Bold.ttf"),
     "DarkerGrotesque-Medium": require("../assets/fonts/DarkerGrotesque-Medium.ttf"),
@@ -46,12 +52,16 @@ export default function RootLayout() {
   return (
     // <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
     //   <ClerkLoaded>
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(root)" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NotificationWrapper>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(root)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </NotificationWrapper>
+    </GestureHandlerRootView>
     //   </ClerkLoaded>
     // </ClerkProvider>
   );
