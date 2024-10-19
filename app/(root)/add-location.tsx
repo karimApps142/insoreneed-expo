@@ -2,13 +2,7 @@ import { View } from "react-native";
 import React, { useCallback, useEffect } from "react";
 import { router } from "expo-router";
 import { formikRef } from "@/constants/global-refs";
-import {
-    locationTypes,
-    parkingOptions,
-    petsOptions,
-    stairsOptions,
-} from "@/constants/location-picker-data";
-import { initialValues } from "@/lib/app-data";
+import { getLocationValues } from "@/lib/app-data";
 import BaseView from "@/components/BaseView";
 import BaseForm from "@/components/form/BaseForm";
 import { BaseHeader } from "@/components/BaseHeader";
@@ -19,14 +13,39 @@ import { BaseFormPicker } from "@/components/form/BaseFormPicker";
 import BottomActionCard from "@/components/bookings/BottomActionCard";
 import { useLocationStore } from "@/store/location";
 import { validateLocationForm } from "@/lib/validations";
-import { useNotifications } from "react-native-notificated";
-
+import {
+    useGetLocationOptions,
+    useCreateLocation,
+    useUpdateLocation,
+} from "@/hooks/useLocationApi";
+import { useQueryClient } from "@tanstack/react-query";
+import { showNotification } from "@/utility/toast-service";
 
 const BookingLocation = () => {
-    const { destinationAddress, destinationLatitude, destinationLongitude } =
-        useLocationStore();
-    const { notify } = useNotifications()
 
+
+    const queryClient = useQueryClient();
+    const {
+        location,
+        destinationAddress,
+        destinationLatitude,
+        destinationLongitude,
+    } = useLocationStore();
+
+    const isEdit = !!location;
+
+    const { data, isLoading } = useGetLocationOptions();
+
+    const locationTypes = data?.locationTypes;
+    const parkingTypes = data?.parkingTypes;
+    const petsOptions = data?.petsOptions;
+    const stairsOptions = data?.stairsOptions;
+
+    const locationCreateMutation = useCreateLocation();
+
+    const locationUpdateMutation = useUpdateLocation(location?.id);
+
+    const locationValues = getLocationValues(isEdit, location as LocationType);
 
     useEffect(() => {
         if (destinationAddress) {
@@ -42,15 +61,34 @@ const BookingLocation = () => {
     const handleSubmit = useCallback((values: LocationFormValues) => {
         const { isError } = validateLocationForm(values);
         if (!isError) {
-            alert(JSON.stringify(values))
+            if (isEdit) {
+                locationUpdateMutation.mutate(values, {
+                    onSuccess: () => {
+                        queryClient.invalidateQueries({ queryKey: ["locations"] });
+                        router.replace("/(root)/select-location");
+                        showNotification("success", "location updated!");
+                    },
+                });
+            } else {
+                locationCreateMutation.mutate(values, {
+                    onSuccess: () => {
+                        queryClient.invalidateQueries({ queryKey: ["locations"] });
+                        router.replace("/(root)/select-location");
+                        showNotification("success", "New location added!");
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                    },
+                });
+            }
         }
     }, []);
 
     return (
-        <BaseView>
+        <BaseView overlayLoading={isLoading}>
             <BaseHeader />
             <BaseForm
-                initialValues={initialValues}
+                initialValues={locationValues}
                 innerRef={formikRef}
                 onSubmit={handleSubmit}
             >
@@ -71,8 +109,10 @@ const BookingLocation = () => {
 
                     <View className="mt-3">
                         <BaseFormPicker
-                            name="location_type"
+                            name="location_type_id"
                             label="Location type"
+                            item_value="id"
+                            item_subtitle="helper_text"
                             items={locationTypes}
                             pickerLabel="Location Types"
                         />
@@ -80,16 +120,20 @@ const BookingLocation = () => {
 
                     <View className="mt-3">
                         <BaseFormPicker
-                            name="parking_type"
+                            name="parking_type_id"
+                            item_value="id"
+                            item_subtitle="helper_text"
                             label="Parking"
-                            items={parkingOptions}
+                            items={parkingTypes}
                             pickerLabel="Parking"
                         />
                     </View>
 
                     <View className="mt-3">
                         <BaseFormPicker
-                            name="stairs"
+                            name="stairs_option_id"
+                            item_value="id"
+                            item_subtitle="helper_text"
                             label="Do You have any stairs at this location?"
                             items={stairsOptions}
                             pickerLabel="Do You have any stairs at this location?"
@@ -98,7 +142,9 @@ const BookingLocation = () => {
 
                     <View className="mt-3">
                         <BaseFormPicker
-                            name="pets"
+                            name="pets_option_id"
+                            item_value="id"
+                            item_subtitle="helper_text"
                             label="Do You have any pets at this location?"
                             items={petsOptions}
                             pickerLabel="Do You have any pets at this location?"
@@ -109,12 +155,16 @@ const BookingLocation = () => {
                         <BaseFormInput
                             name="location_notes"
                             label="Location notes"
-                            placeholder="e.g. park in driveway"
+                            placeholder="Enter notes about the location (e.g., parking instructions)"
                         />
                     </View>
                 </BaseScrollView>
 
-                <BottomActionCard title="Save & Apply" type="submit" />
+                <BottomActionCard
+                    title={isEdit ? "Update" : "Save & Apply"}
+                    type="submit"
+                    loading={isEdit ? locationUpdateMutation.isPending : locationCreateMutation.isPending}
+                />
             </BaseForm>
         </BaseView>
     );

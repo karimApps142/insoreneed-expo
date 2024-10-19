@@ -5,7 +5,6 @@ import { BaseHeader } from '@/components/BaseHeader'
 import BaseScrollView from '@/components/BaseScrollView'
 import SubHeader from '@/components/bookings/SubHeader'
 import BasePicker from '@/components/BasePicker'
-import { locationTypes } from '@/constants/location-picker-data'
 
 const BookingDetails = () => {
     const [selectItem, setSelectedItem] = useState(null);
@@ -19,7 +18,7 @@ const BookingDetails = () => {
                 <View className="mt-3">
                     <BasePicker
                         label="Service type"
-                        items={locationTypes}
+                        items={[]}
                         pickerLabel="Service type"
                         selectedItem={selectItem}
                         setSelected={(value) => {
@@ -31,7 +30,7 @@ const BookingDetails = () => {
                 <View className="mt-3">
                     <BasePicker
                         label="Session type"
-                        items={locationTypes}
+                        items={[]}
                         pickerLabel="Session types"
                         selectedItem={selectItem}
                         setSelected={(value) => {
@@ -43,7 +42,7 @@ const BookingDetails = () => {
                 <View className="mt-3">
                     <BasePicker
                         label="Duration"
-                        items={locationTypes}
+                        items={[]}
                         pickerLabel="Length"
                         selectedItem={selectItem}
                         setSelected={(value) => {
@@ -55,7 +54,7 @@ const BookingDetails = () => {
                 <View className="mt-3">
                     <BasePicker
                         label="Type"
-                        items={locationTypes}
+                        items={[]}
                         pickerLabel="Treatment Type"
                         selectedItem={selectItem}
                         setSelected={(value) => {
@@ -67,7 +66,7 @@ const BookingDetails = () => {
                 <View className="mt-3">
                     <BasePicker
                         label="Add-ons"
-                        items={locationTypes}
+                        items={[]}
                         pickerLabel="Treatment add-ons"
                         selectedItem={selectItem}
                         setSelected={(value) => {

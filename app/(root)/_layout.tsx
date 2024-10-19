@@ -6,9 +6,13 @@ const Layout = () => {
 
         <Stack screenOptions={{
             headerShown: false,
-            animation: 'none'
+            animation: 'fade_from_bottom'
         }}>
-            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(tabs)"
+                options={{
+                    animation: 'none',
+                }}
+            />
             <Stack.Screen name="select-location" />
             <Stack.Screen name="add-location" />
             <Stack.Screen name="booking-details" />

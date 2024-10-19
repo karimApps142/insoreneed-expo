@@ -15,6 +15,8 @@ import { calculateRegion } from "@/lib/map";
 import { useLocationStore } from "@/store/location";
 import { LocationPointer } from "@/components/map/LocationPointer";
 import BottomActionCard from "@/components/bookings/BottomActionCard";
+import useGeoFencing from "@/hooks/useGeoFencing";
+import { showNotification } from "@/utility/toast-service";
 
 interface Coords {
     latitude: number | null;
@@ -27,6 +29,7 @@ Geocoder.init(apiKey);
 
 const ChooseFromMap: React.FC = () => {
     const { userLongitude, userLatitude, userAddress } = useLocationStore();
+    const { loadingCities, checkLocation } = useGeoFencing();
 
     const {
         destinationLatitude,
@@ -38,8 +41,10 @@ const ChooseFromMap: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [showLocationPointer, setShowLocationPointer] = useState<boolean>(true);
     const [coords, setCoords] = useState<Coords>({
-        latitude: destinationLatitude ? destinationLatitude : userLatitude,
-        longitude: destinationLongitude ? destinationLongitude : userLongitude,
+        latitude: destinationLatitude ? Number(destinationLatitude) : userLatitude,
+        longitude: destinationLongitude
+            ? Number(destinationLongitude)
+            : userLongitude,
     });
 
     const [address, setAddress] = useState<string | null>(
@@ -47,8 +52,12 @@ const ChooseFromMap: React.FC = () => {
     );
 
     const region = calculateRegion({
-        userLatitude: destinationLatitude ? destinationLatitude : userLatitude,
-        userLongitude: destinationLongitude ? destinationLongitude : userLongitude,
+        userLatitude: destinationLatitude
+            ? Number(destinationLatitude)
+            : userLatitude,
+        userLongitude: destinationLongitude
+            ? Number(destinationLongitude)
+            : userLongitude,
     });
 
     const onRegionChangeComplete = async (region: Region) => {
@@ -85,13 +94,23 @@ const ChooseFromMap: React.FC = () => {
             return;
         }
 
-        setDestinationLocation({
+        checkLocation({
             latitude: Number(coords.latitude),
             longitude: Number(coords.longitude),
-            address: address ?? "",
-        });
+        })
+            .then((id: any) => {
+                setDestinationLocation({
+                    latitude: Number(coords.latitude),
+                    longitude: Number(coords.longitude),
+                    address: address ?? "",
+                    regionId: id,
+                });
 
-        router.replace("/(root)/add-location");
+                router.replace("/(root)/add-location");
+            })
+            .catch((err) => {
+                showNotification("error", err);
+            });
     };
 
     if (!region) return null;

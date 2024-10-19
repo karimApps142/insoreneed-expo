@@ -1,16 +1,17 @@
 // import { useSignUp } from "@clerk/clerk-expo";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
-import { ReactNativeModal } from "react-native-modal";
+import { Image, ScrollView, Text, View } from "react-native";
 
 import BaseButton from "@/components/BaseButton";
 import BaseInput from "@/components/BaseInput";
-// import OAuth from "@/components/OAuth";
+import OAuth from "@/components/auth/OAuth";
 import { icons, images } from "@/constants";
-
+import { useAuthStore } from "@/store/auth";
+import BaseView from "@/components/BaseView";
 
 const SignUp = () => {
+    const { loading } = useAuthStore();
     //   const { isLoaded, signUp, setActive } = useSignUp();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -82,114 +83,56 @@ const SignUp = () => {
     //     }
     //   };
     return (
-        <ScrollView className="flex-1 bg-white">
-            <View className="flex-1 bg-white">
-                <View className="relative w-full h-[250px]">
-                    <Image source={images.signupHero} className="z-0 w-full h-[250px]" />
-                    <Text className="text-2xl text-black font-JakartaSemiBold absolute bottom-5 left-5">
-                        Create Your Account
-                    </Text>
-                </View>
-                <View className="p-5">
-                    <BaseInput
-                        label="Name"
-                        placeholder="Enter name"
-                        icon={icons.person}
-                        value={form.name}
-                        onChangeText={(value) => setForm({ ...form, name: value })}
-                    />
-                    <BaseInput
-                        label="Email"
-                        placeholder="Enter email"
-                        icon={icons.email}
-                        textContentType="emailAddress"
-                        value={form.email}
-                        onChangeText={(value) => setForm({ ...form, email: value })}
-                    />
-                    <BaseInput
-                        label="Password"
-                        placeholder="Enter password"
-                        icon={icons.lock}
-                        secureTextEntry={true}
-                        textContentType="password"
-                        value={form.password}
-                        onChangeText={(value) => setForm({ ...form, password: value })}
-                    />
-                    <BaseButton
-                        title="Sign Up"
-                        onPress={() => { }}
-                        className="mt-6"
-                    />
-                    {/* <OAuth /> */}
-                    <Link
-                        href="/sign-in"
-                        className="text-lg text-center text-general-200 mt-10"
-                    >
-                        Already have an account?{" "}
-                        <Text className="text-primary-500">Log In</Text>
-                    </Link>
-                </View>
-                <ReactNativeModal
-                    isVisible={verification.state === "pending"}
-                    // onBackdropPress={() =>
-                    //   setVerification({ ...verification, state: "default" })
-                    // }
-                    onModalHide={() => {
-                        if (verification.state === "success") {
-                            setShowSuccessModal(true);
-                        }
-                    }}
-                >
-                    <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-                        <Text className="font-JakartaExtraBold text-2xl mb-2">
-                            Verification
-                        </Text>
-                        <Text className="font-Jakarta mb-5">
-                            We've sent a verification code to {form.email}.
-                        </Text>
-                        <BaseInput
-                            label={"Code"}
-                            icon={icons.lock}
-                            placeholder={"12345"}
-                            value={verification.code}
-                            keyboardType="numeric"
-                            onChangeText={(code) =>
-                                setVerification({ ...verification, code })
-                            }
-                        />
-                        {verification.error && (
-                            <Text className="text-red-500 text-sm mt-1">
-                                {verification.error}
-                            </Text>
-                        )}
-                        <BaseButton
-                            title="Verify Email"
-                            onPress={() => { }}
-                            className="mt-5 bg-success-500"
-                        />
-                    </View>
-                </ReactNativeModal>
-                <ReactNativeModal isVisible={showSuccessModal}>
-                    <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+        <BaseView overlayLoading={loading}>
+            <ScrollView className="flex-1 bg-white">
+                <View className="flex-1 bg-white">
+                    <View className="relative w-full h-[250px]">
                         <Image
-                            source={images.check}
-                            className="w-[110px] h-[110px] mx-auto my-5"
+                            source={images.signupHero}
+                            className="z-0 w-full h-[250px]"
                         />
-                        <Text className="text-3xl font-JakartaBold text-center">
-                            Verified
+                        <Text className="text-2xl text-black font-JakartaSemiBold absolute bottom-5 left-5">
+                            Create Your Account
                         </Text>
-                        <Text className="text-base text-gray-400 font-Jakarta text-center mt-2">
-                            You have successfully verified your account.
-                        </Text>
-                        <BaseButton
-                            title="Browse Home"
-                            onPress={() => router.push(`/(root)/(tabs)/home`)}
-                            className="mt-5"
-                        />
                     </View>
-                </ReactNativeModal>
-            </View>
-        </ScrollView>
+                    <View className="p-5">
+                        <BaseInput
+                            label="Name"
+                            placeholder="Enter name"
+                            icon={icons.person}
+                            value={form.name}
+                            onChangeText={(value) => setForm({ ...form, name: value })}
+                        />
+                        <BaseInput
+                            label="Email"
+                            placeholder="Enter email"
+                            icon={icons.email}
+                            textContentType="emailAddress"
+                            value={form.email}
+                            onChangeText={(value) => setForm({ ...form, email: value })}
+                        />
+                        <BaseInput
+                            label="Password"
+                            placeholder="Enter password"
+                            icon={icons.lock}
+                            secureTextEntry={true}
+                            textContentType="password"
+                            value={form.password}
+                            onChangeText={(value) => setForm({ ...form, password: value })}
+                        />
+                        <BaseButton title="Sign Up" onPress={() => { }} className="mt-6" />
+                        <OAuth url="/(auth)/sign-up" />
+                        <Link
+                            href="/sign-in"
+                            className="text-lg text-center text-general-200 mt-10"
+                        >
+                            Already have an account?{" "}
+                            <Text className="text-primary-500">Log In</Text>
+                        </Link>
+                    </View>
+                </View>
+            </ScrollView>
+        </BaseView>
     );
 };
 export default SignUp;

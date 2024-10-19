@@ -21,20 +21,20 @@ export const validateLocationForm = (values: LocationFormValues): ValidationResu
         errors.longitude = 'Longitude is required.';
     }
 
-    if (!values.location_type) {
-        errors.location_type = 'Please select a location type.';
+    if (!values.location_type_id) {
+        errors.location_type_id = 'Please select a location type.';
     }
 
-    if (!values.parking_type) {
-        errors.parking_type = 'Please select a parking type.';
+    if (!values.parking_type_id) {
+        errors.parking_type_id = 'Please select a parking type.';
     }
 
-    if (!values.stairs) {
-        errors.stairs = 'Please select a stairs option.';
+    if (!values.stairs_option_id) {
+        errors.stairs_option_id = 'Please select a stairs option.';
     }
 
-    if (!values.pets) {
-        errors.pets = 'Please select pets option.';
+    if (!values.pets_option_id) {
+        errors.pets_option_id = 'Please select pets option.';
     }
 
     const isError = Object.keys(errors).length > 0;
@@ -44,7 +44,7 @@ export const validateLocationForm = (values: LocationFormValues): ValidationResu
     if (isError) {
         showNotification('error', firstErrorMessage as string);
     } else {
-        clearNotification(); // Clear any existing notifications if no errors
+        clearNotification();
     }
 
     return { isError, firstErrorMessage, errors };

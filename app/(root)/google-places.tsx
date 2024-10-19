@@ -10,12 +10,16 @@ import { useLocationStore } from "@/store/location";
 import { router } from "expo-router";
 import Geocoder from "react-native-geocoding";
 import { placesRef } from "@/constants/global-refs";
+import useGeoFencing from "@/hooks/useGeoFencing";
+import { showNotification } from "@/utility/toast-service";
 
 const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY as string;
 
 const GooglePlaces = () => {
     const { setDestinationLocation } = useLocationStore();
     const { userAddress, userLatitude, userLongitude } = useLocationStore();
+
+    const { loadingCities, checkLocation } = useGeoFencing();
 
     useEffect(() => {
         setTimeout(() => {
@@ -64,12 +68,23 @@ const GooglePlaces = () => {
         longitude: number;
         address: string;
     }) => {
-        setDestinationLocation({ latitude, longitude, address });
-        router.replace("/(root)/add-location");
+        checkLocation({ latitude, longitude })
+            .then((id: any) => {
+                setDestinationLocation({
+                    latitude,
+                    longitude,
+                    address,
+                    regionId: id,
+                });
+                router.replace("/(root)/add-location");
+            })
+            .catch((err) => {
+                showNotification("error", err);
+            });
     };
 
     return (
-        <BaseView>
+        <BaseView overlayLoading={loadingCities}>
             <BaseHeader onPressBack={() => router.replace("/(root)/add-location")} />
             <View style={styles.container}>
                 <GoogleTextInput label="Address" handlePress={handleConfirmLocation} />

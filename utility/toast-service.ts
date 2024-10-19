@@ -14,6 +14,7 @@ export const showNotification = (
   title: string,
   description?:string
 ) => {
+  
   // Remove the existing notification if it exists
   if (currentNotification) {
     remove(currentNotification.id);

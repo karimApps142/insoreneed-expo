@@ -9,7 +9,7 @@ interface NotificationWrapperProps {
 const NotificationWrapper: React.FC<NotificationWrapperProps> = ({ children }) => {
     const { NotificationsProvider } = createNotifications({
         isNotch: true,
-        duration: 1500,
+        duration: 3000,
         defaultStylesSettings: {
             darkMode: false,
             globalConfig: {
