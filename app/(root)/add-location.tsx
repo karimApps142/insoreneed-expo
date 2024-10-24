@@ -23,18 +23,22 @@ import { showNotification } from "@/utility/toast-service";
 
 const BookingLocation = () => {
 
-
     const queryClient = useQueryClient();
+
     const {
-        location,
+        location: locationData,
         destinationAddress,
         destinationLatitude,
         destinationLongitude,
+        regionId
     } = useLocationStore();
 
-    const isEdit = !!location;
+    const locations = queryClient.getQueryData<LocationsResponse>(['locations'])?.data ?? [];
+    const location = locations.find(loc => loc.id === locationData?.id);
 
-    const { data, isLoading } = useGetLocationOptions();
+    const isEdit = !!locationData;
+
+    const { data, isLoading } = useGetLocationOptions(regionId);
 
     const locationTypes = data?.locationTypes;
     const parkingTypes = data?.parkingTypes;
@@ -49,12 +53,23 @@ const BookingLocation = () => {
 
     useEffect(() => {
         if (destinationAddress) {
-            formikRef.current?.setValues({
-                ...formikRef.current.values,
-                address: destinationAddress,
-                latitude: destinationLatitude,
-                longitude: destinationLongitude,
-            });
+            if (isEdit && regionId != location?.region.id) {
+                formikRef.current?.setValues({
+                    address: destinationAddress,
+                    latitude: destinationLatitude,
+                    longitude: destinationLongitude,
+                    region_id: regionId
+                });
+            } else {
+                formikRef.current?.setValues({
+                    ...formikRef.current.values,
+                    address: destinationAddress,
+                    latitude: destinationLatitude,
+                    longitude: destinationLongitude,
+                    region_id: regionId
+                });
+            }
+
         }
     }, [destinationAddress]);
 

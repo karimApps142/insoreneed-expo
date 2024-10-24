@@ -15,7 +15,7 @@ import { useCreateBookingStore } from "@/store/create-booking";
 
 const SelectLocation = () => {
     const { setLocation } = useLocationStore();
-    const { setLocationID } = useCreateBookingStore();
+    const { setLocationValues } = useCreateBookingStore();
     const { data, isLoading } = useGetLocations();
 
     const locations = data?.data ?? [];
@@ -47,10 +47,10 @@ const SelectLocation = () => {
                         checked={selectedLocation === location.id}
                         onToggle={() => onToggle(location)}
                         onPressEdit={() => {
-                            setLocation(location)
+                            setLocation(location);
                             router.navigate({
-                                pathname: "/(root)/add-location"
-                            })
+                                pathname: "/(root)/add-location",
+                            });
                         }}
                     />
                 ))}
@@ -59,8 +59,8 @@ const SelectLocation = () => {
                     className="my-6"
                     activeOpacity={0.5}
                     onPress={() => {
-                        setLocation(null)
-                        router.navigate("/(root)/add-location")
+                        setLocation(null);
+                        router.navigate("/(root)/add-location");
                     }}
                 >
                     <Text className="font-JakartaMedium text-lg underline text-blue-600">
@@ -74,8 +74,14 @@ const SelectLocation = () => {
                 title="Use this Location"
                 onPress={() => {
                     if (selectedLocation) {
-                        setLocationID(selectedLocation)
-                        router.navigate("/(root)/booking-details")
+                        const location = locations.find(
+                            (location) => location.id === selectedLocation
+                        );
+                        setLocationValues({
+                            location_id: location?.id as number,
+                            country_id: location?.country.id as number,
+                        });
+                        router.navigate("/(root)/booking-details");
                     }
                 }}
             />

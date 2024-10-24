@@ -2,6 +2,7 @@ declare interface LocationFormValues {
   address: string;
   latitude: string | number;
   longitude: string | number;
+  region_id: string  | number,
   location_type_id: string | number;
   parking_type_id: string | number;
   stairs_option_id: string | number;

@@ -12,12 +12,16 @@ import Geocoder from "react-native-geocoding";
 import { placesRef } from "@/constants/global-refs";
 import useGeoFencing from "@/hooks/useGeoFencing";
 import { showNotification } from "@/utility/toast-service";
+import { useQueryClient } from "@tanstack/react-query";
 
 const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY as string;
 
 const GooglePlaces = () => {
+    const queryClient = useQueryClient();
+
     const { setDestinationLocation } = useLocationStore();
-    const { userAddress, userLatitude, userLongitude } = useLocationStore();
+    const { userAddress, userLatitude, userLongitude, regionId } =
+        useLocationStore();
 
     const { loadingCities, checkLocation } = useGeoFencing();
 
@@ -76,6 +80,10 @@ const GooglePlaces = () => {
                     address,
                     regionId: id,
                 });
+                if (regionId != id) {
+                    queryClient.invalidateQueries({ queryKey: ["locationOptions", id] });
+                }
+
                 router.replace("/(root)/add-location");
             })
             .catch((err) => {

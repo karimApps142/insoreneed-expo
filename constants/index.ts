@@ -1,40 +1,47 @@
-const arrowDown = require('@/assets/icons/arrow-down.png');
-const arrowUp = require('@/assets/icons/arrow-up.png');
-const backArrow = require('@/assets/icons/back-arrow.png');
-const chat = require('@/assets/icons/chat.png');
-const checkmark = require('@/assets/icons/check.png');
-const close = require('@/assets/icons/close.png');
-const dollar = require('@/assets/icons/dollar.png');
-const email = require('@/assets/icons/email.png');
-const eyecross = require('@/assets/icons/eyecross.png');
-const google = require('@/assets/icons/google.png');
-const home = require('@/assets/icons/home.png');
-const list = require('@/assets/icons/list.png');
-const lock = require('@/assets/icons/lock.png');
-const map = require('@/assets/icons/map.png');
-const marker = require('@/assets/icons/marker.png');
-const out = require('@/assets/icons/out.png');
-const person = require('@/assets/icons/person.png');
-const pin = require('@/assets/icons/pin.png');
-const point = require('@/assets/icons/point.png');
-const profile = require('@/assets/icons/profile.png');
-const search = require('@/assets/icons/search.png');
-const selectedMarker = require('@/assets/icons/selected-marker.png');
-const star = require('@/assets/icons/star.png');
-const target = require('@/assets/icons/target.png');
-const to = require('@/assets/icons/to.png');
-const menu = require('@/assets/icons/more.png');
+import arrowDown from "@/assets/icons/arrow-down.png";
+import arrowUp from "@/assets/icons/arrow-up.png";
+import backArrow from "@/assets/icons/back-arrow.png";
+import chat from "@/assets/icons/chat.png";
+import checkmark from "@/assets/icons/check.png";
+import close from "@/assets/icons/close.png";
+import dollar from "@/assets/icons/dollar.png";
+import email from "@/assets/icons/email.png";
+import eyecross from "@/assets/icons/eyecross.png";
+import google from "@/assets/icons/google.png";
+import home from "@/assets/icons/home.png";
+import list from "@/assets/icons/list.png";
+import lock from "@/assets/icons/lock.png";
+import map from "@/assets/icons/map.png";
+import marker from "@/assets/icons/marker.png";
+import out from "@/assets/icons/out.png";
+import person from "@/assets/icons/person.png";
+import pin from "@/assets/icons/pin.png";
+import point from "@/assets/icons/point.png";
+import profile from "@/assets/icons/profile.png";
+import search from "@/assets/icons/search.png";
+import selectedMarker from "@/assets/icons/selected-marker.png";
+import star from "@/assets/icons/star.png";
+import target from "@/assets/icons/target.png";
+import to from "@/assets/icons/to.png";
+import menu from "@/assets/icons/more.png";
+import user from "@/assets/icons/user.png";
+import twoUsers from "@/assets/icons/two-users.png";
+import groupUsers from "@/assets/icons/group-users.png";
+import plus from "@/assets/icons/plus.png";
+import done from "@/assets/icons/check.png";
 
 
-const check = require('@/assets/images/check.png');
-const getStarted = require('@/assets/images/get-started.png');
-const message = require('@/assets/images/message.png');
-const noResult = require('@/assets/images/no-result.png');
-const onboarding1 = require('@/assets/images/onboarding1.png');
-const onboarding2 = require('@/assets/images/onboarding2.png');
-const onboarding3 = require('@/assets/images/onboarding3.png');
-const signupHero = require('@/assets/images/signup-hero.png');
-const logo = require('@/assets/images/icon.png');
+
+
+import check from "@/assets/images/check.png";
+import getStarted from "@/assets/images/get-started.png";
+import message from "@/assets/images/message.png";
+import noResult from "@/assets/images/no-result.png";
+import onboarding1 from "@/assets/images/onboarding1.png";
+import onboarding2 from "@/assets/images/onboarding2.png";
+import onboarding3 from "@/assets/images/onboarding3.png";
+import signupHero from "@/assets/images/signup-hero.png";
+import logo from "@/assets/images/icon.png";
 
 
 export const images = {
@@ -46,7 +53,7 @@ export const images = {
   check,
   noResult,
   message,
-  logo
+  logo,
 };
 
 export const icons = {
@@ -75,7 +82,12 @@ export const icons = {
   star,
   target,
   to,
-  menu
+  menu,
+  user,
+  twoUsers,
+  groupUsers,
+  plus,
+  done
 };
 
 export const onboarding = [

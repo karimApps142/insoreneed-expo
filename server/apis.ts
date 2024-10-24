@@ -8,8 +8,13 @@ export const AuthEndpoints = {
 
 export const LocationEndpoints = {
   GET_LOCATIONS: "get-locations",
-  GET_LOCATION_OPTIONS: "get-location-options",
+  GET_LOCATION_OPTIONS: (id?: number | null) =>
+    id ? `get-location-options?region_id=${id}` : "get-location-options",
   CREATE_LOCATION: "create-location",
   UPDATE_LOCATION: (id: number) => `update-location/${id}`,
-  GET_COORDINATES:'get-coordinates'
+  GET_COORDINATES: "get-coordinates",
+};
+
+export const BookingDetailsEndPoints = {
+  GET_BOOKING_OPTIONS: (id: number) => `get-booking-options/${id}`,
 };

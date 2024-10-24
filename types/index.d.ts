@@ -43,8 +43,19 @@ declare interface BasePickerProps {
     item_label?: string;
     item_value?: string;
     item_subtitle?: string;
+    item_icon?:string;
+    item_price?:string,
     setSelected?: (value: any) => void;
     onSelect?: (value: any) => void;
     pickerLabel?: string;
     pickerOffset?: number;
+    disabled?: boolean;
+    contentContainerStyle?:string
+    contentLabelStyle?:string
+    contentSubtitleStyle?:string,
+    contentHeight?:number,
+    contentOffSet?:number,
+    learnMore?:boolean,
+    currencySymbol?:string,
+    multiple?:boolean
 }

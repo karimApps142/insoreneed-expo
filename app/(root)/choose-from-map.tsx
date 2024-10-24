@@ -9,7 +9,12 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import Geocoder from "react-native-geocoding";
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
+import MapView, {
+    Marker,
+    Polygon,
+    PROVIDER_GOOGLE,
+    Region,
+} from "react-native-maps";
 import { icons } from "@/constants";
 import { calculateRegion } from "@/lib/map";
 import { useLocationStore } from "@/store/location";
@@ -17,6 +22,7 @@ import { LocationPointer } from "@/components/map/LocationPointer";
 import BottomActionCard from "@/components/bookings/BottomActionCard";
 import useGeoFencing from "@/hooks/useGeoFencing";
 import { showNotification } from "@/utility/toast-service";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Coords {
     latitude: number | null;
@@ -28,14 +34,17 @@ const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY as string;
 Geocoder.init(apiKey);
 
 const ChooseFromMap: React.FC = () => {
+    const queryClient = useQueryClient();
+
     const { userLongitude, userLatitude, userAddress } = useLocationStore();
-    const { loadingCities, checkLocation } = useGeoFencing();
+    const { regions, checkLocation } = useGeoFencing();
 
     const {
         destinationLatitude,
         destinationLongitude,
         destinationAddress,
         setDestinationLocation,
+        regionId,
     } = useLocationStore();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -105,6 +114,9 @@ const ChooseFromMap: React.FC = () => {
                     address: address ?? "",
                     regionId: id,
                 });
+                if (regionId != id) {
+                    queryClient.invalidateQueries({ queryKey: ["locationOptions", id] });
+                }
 
                 router.replace("/(root)/add-location");
             })
@@ -188,6 +200,19 @@ const ChooseFromMap: React.FC = () => {
                                 }}
                             />
                         ) : null}
+
+                        {regions?.map((region) => (
+                            <Polygon
+                                key={region.region_id}
+                                coordinates={region.polygon.map((coord) => ({
+                                    latitude: Number(coord.latitude),
+                                    longitude: Number(coord.longitude),
+                                }))}
+                                strokeColor="rgba(255, 0, 0, 0.1)"
+                                fillColor="rgba(255, 0, 0, 0.1)"
+                                strokeWidth={2}
+                            />
+                        ))}
                     </MapView>
                     {showLocationPointer && <LocationPointer />}
                 </View>
