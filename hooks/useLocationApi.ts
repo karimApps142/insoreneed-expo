@@ -2,6 +2,17 @@ import { fetchApi } from "@/lib/fetch";
 import { LocationEndpoints } from "@/server/apis";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+const useGetLocations = () => {
+  return useQuery({
+    queryKey: ["locations"],
+    queryFn: () =>
+      fetchApi<LocationsResponse>({
+        url: LocationEndpoints.GET_LOCATIONS,
+      }),
+    retry: false,
+  });
+};
+
 const useCreateLocation = () =>
   useMutation({
     mutationFn: (data: LocationFormValues) =>
@@ -24,17 +35,6 @@ const useUpdateLocation = (id?: any) =>
     retry: false,
   });
 
-const useGetLocations = () => {
-  return useQuery({
-    queryKey: ["locations"],
-    queryFn: () =>
-      fetchApi<LocationsResponse>({
-        url: LocationEndpoints.GET_LOCATIONS,
-      }),
-    retry: 1,
-  });
-};
-
 const useGetCoordinates = () => {
   return useQuery({
     queryKey: ["coordinates"],
@@ -50,7 +50,7 @@ const useGetCoordinates = () => {
 
 const useGetLocationOptions = (id?: number | null) => {
   return useQuery({
-    queryKey: ["locationOptions" , id],
+    queryKey: ["locationOptions", id],
     queryFn: () =>
       fetchApi<OptionsResponse>({
         url: LocationEndpoints.GET_LOCATION_OPTIONS(id),
@@ -61,9 +61,9 @@ const useGetLocationOptions = (id?: number | null) => {
 };
 
 export {
+  useGetLocations,
   useCreateLocation,
   useUpdateLocation,
-  useGetLocations,
   useGetLocationOptions,
   useGetCoordinates,
 };

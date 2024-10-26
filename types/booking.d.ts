@@ -42,10 +42,17 @@ interface Duration {
     price: number;
 }
 
+interface GenderOption {
+    id: number;            // Assuming you want to include the ID
+    label: string;
+    helper_text?: string; // Optional property
+    value: string;
+}
 interface MassageData {
     country:Country,
     categories: Category[];
     services: Service[];
     addons: Addon[];
     durations: Duration[];
+    genderOptions:GenderOption[];
 }

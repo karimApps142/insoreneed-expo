@@ -1,58 +1,71 @@
 interface OptionType {
-    id: number;
-    label: string;
-  }
+  id: number;
+  label: string;
+}
 
-  interface Country {
-    id: number; 
-    name: string;
-    currency_code: string;
-    currency_symbol: string;
+interface Country {
+  id: number;
+  name: string;
+  currency_code: string;
+  currency_symbol: string;
 }
 
 interface Region {
-    id: number; 
-    name: string;
-    opening_time: string; 
-    closing_time: string; 
-    radius_in_km: number;
+  id: number;
+  name: string;
+  opening_time: string;
+  closing_time: string;
+  radius_in_km: number;
 }
-  
-   interface LocationType {
-    id: number;
-    address: string;
-    latitude: string | number;  
-    longitude: string | number;
-    region: Region;
-    country: Country;
-    location_type: OptionType;
-    parking_type: OptionType;
-    stairs_option: OptionType;
-    pets_option: OptionType;
-    location_notes: string;
-  }
 
-  interface LocationsResponse {
-    data: LocationType[];
-  }
+interface LocationType {
+  id: number;
+  address: string;
+  latitude: string | number;
+  longitude: string | number;
+  region: Region;
+  country: Country;
+  location_type: OptionType;
+  parking_type: OptionType;
+  stairs_option: OptionType;
+  pets_option: OptionType;
+  location_notes: string;
+}
 
-  interface LocationRecord  {
-    region_id: number;
-    polygon:{latitude: string | number;longitude: string | number}[]
-};
+interface RecipientType {
+  id: number;
+  name:string;
+  email:string;
+  phone:string;
+  relationship:string;
+  gender:string;
+  note:string
+}
 
-  interface Option {
-    id: number;
-    country_id: number;
-    label: string;
-    price: string | null;  
-    helper_text: string | null; 
-  }
-  
+interface LocationsResponse {
+  data: LocationType[];
+}
 
-  interface OptionsResponse {
-    locationTypes: Option[];
-    parkingTypes: Option[];
-    stairsOptions: Option[];
-    petsOptions: Option[];
-  }
+interface RecipientsResponse {
+  data: RecipientType[];
+}
+
+interface LocationRecord {
+  region_id: number;
+  polygon: { latitude: string | number; longitude: string | number }[];
+}
+
+interface Option {
+  id: number;
+  country_id: number;
+  label: string;
+  price: string | null;
+  helper_text: string | null;
+}
+
+interface OptionsResponse {
+  locationTypes: Option[];
+  parkingTypes: Option[];
+  stairsOptions: Option[];
+  petsOptions: Option[];
+}

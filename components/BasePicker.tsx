@@ -1,5 +1,5 @@
+import React, { useCallback, useRef, useState, Suspense, lazy } from "react";
 import {
-    Alert,
     Image,
     ScrollView,
     Text,
@@ -7,13 +7,14 @@ import {
     View,
 } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
-import React, { useCallback, useRef, useState } from "react";
 import { NoResultsFound } from "./NoResultsFound";
 import { COLORS, SIZES } from "@/constants/Theme";
 import BaseIcon from "./BaseIcon";
 import { icons } from "@/constants";
 import { BasePickerProps } from "@/types";
 import BaseButton from "./BaseButton";
+
+const ItemList = lazy(() => import("./PickerItemList"));
 
 const BasePicker: React.FC<BasePickerProps> = ({
     label,
@@ -41,15 +42,18 @@ const BasePicker: React.FC<BasePickerProps> = ({
     contentLabelStyle,
     contentSubtitleStyle,
     learnMore = false,
-    currencySymbol = false,
+    currencySymbol,
     multiple = false,
 }) => {
     const [selectedArray, setSelectedArray] = useState<number[]>([]);
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
     const pickerRef = useRef<any>(null);
     const scrollViewRef = useRef<ScrollView | null>(null);
 
     const calculatedHeight = Math.min(
-        items.length < 1 ? 200 : items.length * contentHeight + contentOffSet,
+        items.length < 1
+            ? contentOffSet + 70
+            : items.length * contentHeight + contentOffSet,
         SIZES.height - pickerOffset
     );
 
@@ -65,6 +69,7 @@ const BasePicker: React.FC<BasePickerProps> = ({
 
     const togglePicker = (open: boolean) => {
         if (open) {
+            setIsSheetOpen(true);
             pickerRef.current?.open();
             setTimeout(() => {
                 if (selectedItem) {
@@ -74,6 +79,7 @@ const BasePicker: React.FC<BasePickerProps> = ({
                 }
             }, 100);
         } else {
+            setIsSheetOpen(false);
             pickerRef.current?.close();
         }
     };
@@ -94,76 +100,6 @@ const BasePicker: React.FC<BasePickerProps> = ({
             }, 200);
             togglePicker(false);
         }
-    };
-
-    const renderItem = (item: any, index: number) => {
-        const isSelected = multiple
-            ? selectedArray.some((value: any) => value == item?.[item_value])
-            : selectedItem === item?.[item_value];
-        return (
-            <TouchableOpacity
-                key={`${index} - ${item?.[item_value]}`}
-                onPress={() => handleItemSelect(item)}
-                activeOpacity={0.5}
-                className={`p-3 mx-4 my-1 rounded flex-row items-center ${contentContainerStyle} ${isSelected
-                        ? "bg-blue-100 border-blue-500 border"
-                        : "border-gray-300 border"
-                    }`}
-            >
-                {multiple && (
-                    <View className="pr-4">
-                        <BaseIcon
-                            icon={isSelected ? icons.done : icons.plus}
-                            color={isSelected ? COLORS.success : COLORS.gray}
-                            size={25}
-                        />
-                    </View>
-                )}
-                <View className="flex-1">
-                    <View className="flex-row">
-                        <Text
-                            className={`flex-1 font-Jost text-lg text-center ${contentLabelStyle} ${isSelected ? "text-gray-700" : "text-gray-500"
-                                }`}
-                        >
-                            {item?.[item_label]}
-                        </Text>
-                        {currencySymbol && (
-                            <Text
-                                className={`font-Jost text-lg text-center ml-2 ${isSelected ? "text-gray-700" : "text-gray-500"
-                                    }`}
-                            >
-                                {currencySymbol}
-                                {item?.[item_price]}
-                            </Text>
-                        )}
-                    </View>
-                    {item?.[item_subtitle] && (
-                        <Text
-                            numberOfLines={3}
-                            className={`text-sm mt-1 font-Jakarta text-center ${contentSubtitleStyle} ${isSelected ? "text-gray-700" : "text-gray-500"
-                                }`}
-                        >
-                            {item?.[item_subtitle]}
-                        </Text>
-                    )}
-                    {learnMore && (
-                        <TouchableOpacity
-                            onPress={() =>
-                                Alert.alert(item?.[item_label], item?.longDescription)
-                            }
-                            className="mt-2 self-start"
-                        >
-                            <Text className="text-blue-500 underline">Learn More</Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-                {item?.[item_icon] && (
-                    <View className="ml-4 mr-2">
-                        <BaseIcon icon={item?.[item_icon]} color={COLORS.gray} size={25} />
-                    </View>
-                )}
-            </TouchableOpacity>
-        );
     };
 
     const getSelectedLabels = () => {
@@ -227,11 +163,31 @@ const BasePicker: React.FC<BasePickerProps> = ({
                     contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
                     ref={scrollViewRef}
                 >
-                    {!items.length ? (
-                        <NoResultsFound title="No data..." />
-                    ) : (
-                        items.map(renderItem)
-                    )}
+                    {isSheetOpen ? (
+                        <Suspense fallback={<Text className="text-lg text-center my-4 font-Jost text-gray-600">Loading...</Text>}>
+                            {items.length === 0 ? (
+                                <NoResultsFound title="No data..." />
+                            ) : (
+                                <ItemList
+                                    items={items}
+                                    handleItemSelect={handleItemSelect}
+                                    contentContainerStyle={contentContainerStyle}
+                                    contentLabelStyle={contentLabelStyle}
+                                    selectedItem={selectedItem}
+                                    contentSubtitleStyle={contentSubtitleStyle}
+                                    item_label={item_label}
+                                    item_value={item_value}
+                                    learnMore={learnMore}
+                                    item_icon={item_icon}
+                                    item_price={item_price}
+                                    item_subtitle={item_subtitle}
+                                    currencySymbol={currencySymbol}
+                                    selectedArray={selectedArray}
+                                    multiple={multiple}
+                                />
+                            )}
+                        </Suspense>
+                    ) : null}
                 </ScrollView>
 
                 {multiple && (
@@ -256,7 +212,12 @@ const BasePicker: React.FC<BasePickerProps> = ({
                     </View>
                 )}
                 <BaseButton
-                    onPress={() => togglePicker(false)}
+                    onPress={() => {
+                        if (multiple) {
+                            setSelectedArray([])
+                        }
+                        togglePicker(false)
+                    }}
                     title="Cancel"
                     bgVariant="outline"
                     textVariant="primary"

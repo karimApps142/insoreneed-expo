@@ -18,3 +18,10 @@ export const LocationEndpoints = {
 export const BookingDetailsEndPoints = {
   GET_BOOKING_OPTIONS: (id: number) => `get-booking-options/${id}`,
 };
+
+export const RecipientEndPoints = {
+  GET_RECIPIENTS: "get-recipients",
+  CREATE_RECIPIENT: "create-recipient",
+  UPDATE_RECIPIENT: (id: number) => `update-recipient/${id}`,
+  DELETE_RECIPIENT: (id: number) => `delete-recipient/${id}`,
+};

@@ -10,6 +10,15 @@ declare interface LocationFormValues {
   location_notes: string;
 }
 
+declare interface RecipientFormValues {
+  name: string;
+  email: string;
+  phone?: string;
+  gender: string,
+  relationship: string;
+  note: string;
+}
+
 declare interface AuthSignInData {
   email: string;
   password: string;
@@ -29,6 +38,20 @@ declare interface AuthSignUpData {
   currency_code?:string | null,
   region_code?:string | null,
   time_zone?:string | null,
+}
+
+
+interface Person {
+  service_id: string;
+  duration_id: string;
+  addon_id: number[]; 
+  gender: string;
+}
+
+declare interface BookingDetailsTypes {
+  category_id: number;
+  session_type: string;
+  persons: Person[];
 }
 
 interface FetchApiResponse {
