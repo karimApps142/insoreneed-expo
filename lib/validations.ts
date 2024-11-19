@@ -120,11 +120,11 @@ export const validateRecipientForm = (
   const errors: Partial<Record<keyof RecipientFormValues, string>> = {};
 
   if (!values.name) {
-    errors.name = "Please enter name.";
+    errors.name = "Please enter full name.";
   }
 
   if (!values.email) {
-    errors.email = "Email is required.";
+    errors.email = "Please enter email.";
   }
 
   if (!values.gender) {
@@ -132,7 +132,7 @@ export const validateRecipientForm = (
   }
 
   if (!values.relationship) {
-    errors.relationship = "Please select your relationship.";
+    errors.relationship = "Please select your relationship with them.";
   }
 
   const isError = Object.keys(errors).length > 0;

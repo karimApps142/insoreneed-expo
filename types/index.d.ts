@@ -59,3 +59,23 @@ declare interface BasePickerProps {
     currencySymbol?:string,
     multiple?:boolean
 }
+
+interface AuthUser {
+    id: number;
+    name: string;
+    email: string;
+    phone: string | null;
+    clerk_id: string;
+    provider: string;
+    status: string;
+    currency_code: string | null;
+    region_code: string | null;
+    time_zone: string | null;
+    email_verified_at: string | null; // ISO 8601 format
+    phone_verified_at: string | null; // ISO 8601 format
+    gender: string | null;
+    slug: string;
+    role: string;
+    created_at: string; // ISO 8601 format
+    updated_at: string; // ISO 8601 format
+}

@@ -1,5 +1,6 @@
 import { fetchApi } from "@/lib/fetch";
 import { AuthEndpoints } from "@/server/apis";
+import { AuthUser } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const useSignIn = (data: AuthSignInData) => {
@@ -20,7 +21,7 @@ const useAuthenticateUser = () => {
   return useQuery({
     queryKey: ["user"],
     queryFn: () =>
-      fetchApi({
+      fetchApi<AuthUser>({
         url: AuthEndpoints.GET_AUTHENTICATE_USER,
         displayErrors: false,
       }),

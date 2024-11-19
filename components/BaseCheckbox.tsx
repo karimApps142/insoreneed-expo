@@ -6,6 +6,7 @@ interface BaseCheckboxProps {
     label: string;
     description: string;
     onPressEdit?: () => void;
+    onPressDelete?: () => void;
     onToggle: () => void;
 }
 
@@ -14,6 +15,7 @@ const BaseCheckbox: React.FC<BaseCheckboxProps> = ({
     label,
     description,
     onPressEdit,
+    onPressDelete,
     onToggle,
 }) => {
     return (
@@ -32,7 +34,7 @@ const BaseCheckbox: React.FC<BaseCheckboxProps> = ({
             </View>
             <View className="flex-1">
                 <Text className="font-JakartaMedium text-lg">{label}</Text>
-                <Text className="font-Jakarta text-sm capitalize">{description}</Text>
+                <Text className="font-Jakarta text-sm">{description}</Text>
             </View>
             {onPressEdit ? (
                 <Text
@@ -40,6 +42,14 @@ const BaseCheckbox: React.FC<BaseCheckboxProps> = ({
                     className="pl-4 text-lg text-blue-500 font-JakartaMedium"
                 >
                     Edit
+                </Text>
+            ) : null}
+            {onPressDelete ? (
+                <Text
+                    onPress={onPressDelete}
+                    className="pl-4 text-lg text-danger-500 font-JakartaMedium"
+                >
+                    Delete
                 </Text>
             ) : null}
         </TouchableOpacity>

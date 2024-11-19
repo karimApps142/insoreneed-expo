@@ -43,9 +43,9 @@ interface Duration {
 }
 
 interface GenderOption {
-    id: number;            // Assuming you want to include the ID
+    id: number;            
     label: string;
-    helper_text?: string; // Optional property
+    helper_text?: string; 
     value: string;
 }
 interface MassageData {

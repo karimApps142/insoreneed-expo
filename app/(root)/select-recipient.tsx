@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Alert, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import BaseView from "@/components/BaseView";
@@ -6,14 +6,20 @@ import { BaseHeader } from "@/components/BaseHeader";
 import BaseScrollView from "@/components/BaseScrollView";
 import SubHeader from "@/components/bookings/SubHeader";
 import BaseCheckbox from "@/components/BaseCheckbox";
-import { useGetRecipients } from "@/hooks/useRecipientsApi";
+import { useDeleteRecipient, useGetRecipients } from "@/hooks/useRecipientsApi";
 import BottomActionCard from "@/components/bookings/BottomActionCard";
 import { useCreateBookingStore } from "@/store/create-booking";
+import { showNotification } from "@/utility/toast-service";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SelectRecipient = () => {
     const [selectedRecipient, setSelectedRecipient] = useState(null);
     const { data, isLoading } = useGetRecipients();
     const { setRecipientValues } = useCreateBookingStore();
+    const deleteRecipientMutation = useDeleteRecipient();
+    const queryClient = useQueryClient();
+
+
 
     const recipients = data?.data ?? [];
 
@@ -26,7 +32,7 @@ const SelectRecipient = () => {
     };
 
     return (
-        <BaseView overlayLoading={isLoading}>
+        <BaseView overlayLoading={isLoading || deleteRecipientMutation.isPending}>
             <BaseHeader />
             <BaseScrollView>
                 <SubHeader
@@ -46,6 +52,30 @@ const SelectRecipient = () => {
                                 pathname: "/(root)/add-recipient",
                                 params: { id: recipient.id },
                             });
+                        }}
+                        onPressDelete={() => {
+                            Alert.alert(
+                                "Confirm Deletion",
+                                `Are you sure you want to delete ${recipient.name}?`,
+                                [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel"
+                                    },
+                                    {
+                                        text: "Delete",
+                                        onPress: () => {
+                                            deleteRecipientMutation.mutate(recipient.id, {
+                                                onSuccess() {
+                                                    showNotification('success', 'Recipient deleted.');
+                                                    queryClient.invalidateQueries({ queryKey: ["recipients"] });
+                                                },
+                                            })
+                                        },
+                                        style: "destructive"
+                                    }
+                                ]
+                            );
                         }}
                     />
                 ))}
@@ -71,7 +101,6 @@ const SelectRecipient = () => {
                         const recipient = recipients.find(
                             (recipient) => recipient.id === selectedRecipient
                         );
-
                         setRecipientValues({
                             recipient_id: recipient?.id as number,
                             provider_note: recipient?.note,

@@ -20,6 +20,7 @@ import { validateRecipientForm } from "@/lib/validations";
 import { showNotification } from "@/utility/toast-service";
 
 const relationships = [
+    { id: 0, label: "Myself", value: "myself" },
     { id: 1, label: "Spouse/Partner", value: "Spouse/Partner" },
     { id: 2, label: "Parent", value: "Parent" },
     { id: 3, label: "Friend", value: "Friend" },
@@ -48,7 +49,8 @@ const AddRecipient = () => {
 
     const recipients =
         queryClient.getQueryData<RecipientsResponse>(["recipients"])?.data ?? [];
-    const recipient = recipients.find((recipient) => recipient.id === id);
+
+    const recipient = recipients.find((recipient) => recipient.id == id);
 
     const isEdit = !!recipient;
 
@@ -90,21 +92,21 @@ const AddRecipient = () => {
                 onSubmit={handleSubmit}
             >
                 <BaseScrollView>
-                    <SubHeader title="Add Recipient" subtitle="add recipient here." />
+                    <SubHeader title="Recipient details" />
 
                     <View className="mt-3">
                         <BaseFormInput
                             name="name"
-                            label="Thier Name"
-                            placeholder="Thier Name"
+                            label="Name"
+                            placeholder="Full Name"
                         />
                     </View>
 
                     <View className="mt-3">
                         <BaseFormInput
                             name="email"
-                            label="Thier Email"
-                            placeholder="Thier Email"
+                            label="Email address"
+                            placeholder="youremail@mail.com"
                             textContentType="emailAddress"
                         />
                     </View>
@@ -123,7 +125,7 @@ const AddRecipient = () => {
                             label="Gender"
                             item_value="value"
                             items={genders}
-                            pickerLabel="Select Gender"
+                            pickerLabel="Gender"
                         />
                     </View>
 
@@ -140,14 +142,14 @@ const AddRecipient = () => {
                     <View className="mt-3">
                         <BaseFormInput
                             name="note"
-                            label="Note For Provider"
-                            placeholder="Note For Provider"
+                            label="Note For Therapist"
+                            placeholder="e.g., discomfort areas, health notes"
                         />
                     </View>
                 </BaseScrollView>
 
                 <BottomActionCard
-                    title={isEdit ? "Update" : "Add"}
+                    title={isEdit ? "Update recipient" : "Add recipient"}
                     type="submit"
                     loading={
                         isEdit

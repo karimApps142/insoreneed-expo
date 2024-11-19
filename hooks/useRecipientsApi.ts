@@ -1,5 +1,6 @@
 import { fetchApi } from "@/lib/fetch";
 import {  RecipientEndPoints } from "@/server/apis";
+import { showNotification } from "@/utility/toast-service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 
@@ -36,9 +37,9 @@ const useGetRecipients = () => {
         retry: false,
       });
 
-      const useDeleteRecipient = (id?: any) =>
+      const useDeleteRecipient = () =>
         useMutation({
-          mutationFn: () =>
+          mutationFn: (id?: any) =>
             fetchApi({
               method: "DELETE",
               url: RecipientEndPoints.DELETE_RECIPIENT(id),
